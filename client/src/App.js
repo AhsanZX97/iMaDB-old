@@ -2,6 +2,7 @@ import './App.css';
 import React, { Component } from 'react'
 import Grid from '@material-ui/core/Grid';
 import Rating from 'react-rating';
+import Signup from './components/Signup';
 
 export default class App extends Component {
 
@@ -19,7 +20,8 @@ export default class App extends Component {
       genre: "",
       display: false,
       start: 0,
-      end: 10
+      end: 10,
+      apiResponse: "" 
     }
 
     this.next = this.next.bind(this);
@@ -30,6 +32,13 @@ export default class App extends Component {
 
   componentDidMount() {
     this.getMangas();
+    this.callAPI();
+  }
+
+  callAPI() {
+    fetch("http://localhost:9000/testAPI")
+        .then(res => res.text())
+        .then(res => console.log(res));
   }
 
   // gets all list of mangas
@@ -124,6 +133,7 @@ export default class App extends Component {
         <button onClick={this.prev}>Prev</button>
         <button onClick={this.next}>Next</button>
 
+        <p className="App-intro">{this.state.apiResponse}</p>
       </div>
     )
   }
