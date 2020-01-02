@@ -21,12 +21,16 @@ export default class App extends Component {
       display: false,
       start: 0,
       end: 10,
-      apiResponse: "" 
+      email: '',
+      username: '',
+      password: '',
+      apiResponse: ""
     }
 
     this.next = this.next.bind(this);
     this.prev = this.prev.bind(this);
     this.viewManga = this.viewManga.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
 
   }
 
@@ -35,10 +39,15 @@ export default class App extends Component {
     this.callAPI();
   }
 
+  handleSubmit(event) {
+    alert('A email was submitted: ' + this.state.email);
+    event.preventDefault();
+  }
+
   callAPI() {
     fetch("http://localhost:9000/testAPI")
-        .then(res => res.text())
-        .then(res => console.log(res));
+      .then(res => res.text())
+      .then(res => console.log(res));
   }
 
   // gets all list of mangas
@@ -46,12 +55,12 @@ export default class App extends Component {
     fetch('https://www.mangaeden.com/api/list/1/').then(res => res.json()).then((result) => {
       const mangas = result.manga.slice(this.state.start, this.state.end);
       var genres = [];
-      mangas.map(function(manga) {
+      mangas.map(function (manga) {
         var string = "";
         manga.c.forEach(genre => string += genre + " ");
         genres.push(string);
       });
-      this.setState({ 
+      this.setState({
         list: mangas.map(manga => manga.t),
         genre: genres
       });
@@ -102,6 +111,20 @@ export default class App extends Component {
 
       <div>
         <div>
+
+          <form onSubmit= {this.handleSubmit}>
+            <label>
+              Email: <input type="email" name="email" required value={this.state.email} onChange={this.handleChange}/>
+            </label> <br/>
+            <label>
+              Username: <input type="text" name="username" required value={this.state.username} onChange={this.handleChange}/>
+            </label> <br/>
+            <label>
+              Password: <input type="password" name="password" required value={this.state.password} onChange={this.handleChange}/>
+            </label> <br/>
+            <input type="submit" value="Submit" />
+          </form>
+
           <Grid spacing={10}>
             <Grid container item xs={12} spacing={1}>
 
@@ -129,7 +152,7 @@ export default class App extends Component {
             </Grid>
           </Grid>
         </div>
-        
+
         <button onClick={this.prev}>Prev</button>
         <button onClick={this.next}>Next</button>
 
